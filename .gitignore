@@ -1,0 +1,4 @@
+*.sqlite
+settings.py
+*.pyc
+*.*~
