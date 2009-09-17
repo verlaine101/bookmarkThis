@@ -2,7 +2,8 @@ from django.http import HttpResponse,HttpResponseRedirect
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render_to_response
-from bookmarkThis.bookmarkEntry.models import bookmarkEntry,bookmarkEntryForm
+from datetime import date
+from bookmarkThis.bookmarkEntry.models import bookmarkEntry,bookmarkEntryForm,verdict,vote
 
 @login_required
 def createBookmark(request):
@@ -13,8 +14,9 @@ def createBookmark(request):
 			entry.user=request.user
 			entry.title=request.POST['title']
 			entry.summary=request.POST['summary']
-			entry.title=request.POST['link']
-			entry.judgementDay=request.POST['judgementDay']
+			entry.link=request.POST['link']
+			judgmentDay=date(int(request.POST['judgementDay_year']),int(request.POST['judgementDay_month']),int(request.POST['judgementDay_day']))
+			entry.judgementDay=judgmentDay
 			entry.active=1
 			entry.save()
 			return HttpResponseRedirect('/thanks/')
@@ -22,6 +24,18 @@ def createBookmark(request):
 		entryForm=bookmarkEntryForm()
 	return render_to_response('bookmarkEntry.html',{'entryForm':entryForm})
 			
-			
+def default(request):
+	bookmarkObj=bookmarkEntry()
+	todaysBookmarks	= bookmarkObj.getTodaysBookmarks()
+	recentBookmarks = bookmarkObj.getRecentBookmarks(5)
+	return render_to_response('index.html',{'todaysBookmarks':todaysBookmarks,'recentBookmarks':recentBookmarks})
 	
-	
+def bookmarkDetail(request,bookmark_id,verdictInput=None):
+	entry=bookmarkEntry.objects.get(id=bookmark_id)
+	if verdictInput:
+		userVerdict=verdict.objects.get(id=verdictInput)
+		voteObj=vote()
+		voteObj.registerVote(entry,request.user,userVerdict)
+	return render_to_response('entry.html',{'entry':entry, 'user':request.user, 'verdict': verdictInput})
+
+

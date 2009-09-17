@@ -16,7 +16,10 @@ urlpatterns = patterns('',
     (r'^admin/(.*)', admin.site.root),
 	(r'^accounts/login/$', 'django.contrib.auth.views.login'),
 	(r'^accounts/register/$', 'bookmarkThis.users.views.register'),
+	(r'^accounts/user-profile/$', 'bookmarkThis.users.views.userProfile'),
 	(r'^accounts/logout/$', 'django.contrib.auth.views.logout'),
+	(r'^bookmark/(?P<bookmark_id>\d+)/vote/(?P<verdictInput>\d+)/','bookmarkThis.bookmarkEntry.views.bookmarkDetail'),
+	(r'^bookmark/(?P<bookmark_id>\d+)/','bookmarkThis.bookmarkEntry.views.bookmarkDetail'),
 	(r'^create-bookmark/','bookmarkThis.bookmarkEntry.views.createBookmark'),
-	
+	(r'^$', 'bookmarkThis.bookmarkEntry.views.default'),
 )
