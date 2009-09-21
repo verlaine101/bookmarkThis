@@ -54,8 +54,8 @@ class vote(models.Model):
 	def registerVote(self,bookmark,user,verdict):
 		existingVote=vote.objects.filter(bookmarkEntry=bookmark).filter(user=user)
 		if existingVote:
-			existingVote.verdict=verdict
-			existingVote.save()
+			existingVote[0].verdict=verdict
+			existingVote[0].save()
 		else:
 			newVote=vote(bookmarkEntry=bookmark,user=user,verdict=verdict)
 			newVote.save()

@@ -20,6 +20,7 @@ urlpatterns = patterns('',
 	(r'^accounts/logout/$', 'django.contrib.auth.views.logout'),
 	(r'^bookmark/(?P<bookmark_id>\d+)/vote/(?P<verdictInput>\d+)/','bookmarkThis.bookmarkEntry.views.bookmarkDetail'),
 	(r'^bookmark/(?P<bookmark_id>\d+)/','bookmarkThis.bookmarkEntry.views.bookmarkDetail'),
+	(r'^comments/', include('django.contrib.comments.urls')),
 	(r'^create-bookmark/','bookmarkThis.bookmarkEntry.views.createBookmark'),
 	(r'^$', 'bookmarkThis.bookmarkEntry.views.default'),
 )
