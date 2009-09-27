@@ -23,4 +23,7 @@ urlpatterns = patterns('',
 	(r'^comments/', include('django.contrib.comments.urls')),
 	(r'^create-bookmark/','bookmarkThis.bookmarkEntry.views.createBookmark'),
 	(r'^$', 'bookmarkThis.bookmarkEntry.views.default'),
+	(r'^site_media/(?P<path>.*)$', 'django.views.static.serve',
+        {'document_root': '/home/ray/dev/python/django/bookmarkThis-templates/'}),
+
 )

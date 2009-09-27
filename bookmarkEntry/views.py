@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render_to_response
 from datetime import date
 from bookmarkThis.bookmarkEntry.models import bookmarkEntry,bookmarkEntryForm,verdict,vote
-
+import string
 @login_required
 def createBookmark(request):
 	if request.POST:
@@ -15,8 +15,8 @@ def createBookmark(request):
 			entry.title=request.POST['title']
 			entry.summary=request.POST['summary']
 			entry.link=request.POST['link']
-			judgmentDay=date(int(request.POST['judgementDay_year']),int(request.POST['judgementDay_month']),int(request.POST['judgementDay_day']))
-			entry.judgementDay=judgmentDay
+			inputDate=request.POST['judgementDay'].split('/')
+			entry.judgementDay=inputDate[2]+'-'+inputDate[1]+'-'+inputDate[0]
 			entry.active=1
 			entry.save()
 			return HttpResponseRedirect('/thanks/')

@@ -16,18 +16,22 @@ class bookmarkEntry(models.Model):
 	active=models.BooleanField()
 	def __str__(self):
 		return self.title
+
 	def getBookmarksByDate(self,date,month,year):
 		d=date(year,month,date)
 		entries=bookmarkEntry.objects.filter(judgementDay=d)
 		return entries	
+
 	def getTodaysBookmarks(self):
 		today=date.today()
 		entries=bookmarkEntry.objects.filter(judgementDay=today)
 		return entries
+
 	def getRandomBookmarks(self,limit):
 		today=date.today()
 		entries=bookmarkEntry.objects.filter(judgementDay=today).order_by('?')[:limit]
 		return entries
+
 	def getRecentBookmarks(self,limit):
 		entries=bookmarkEntry.objects.filter(active=True).order_by('id').reverse()[:limit]
 		return entries		
@@ -35,7 +39,13 @@ class bookmarkEntry(models.Model):
 
 #bookmark entry form
 class bookmarkEntryForm(ModelForm):
-	judgementDay=forms.DateField(widget=SelectDateWidget())
+	judgementDay = forms.DateField(label='Judgment Day', required=False,  
+		widget=forms.DateTimeInput(attrs={
+			'class':'input',
+			'readonly':'readonly',
+			'size':'15'
+		})
+	)
 	class Meta:
 		model = bookmarkEntry
 		fields = ('title','summary','link','judgementDay')
@@ -54,8 +64,8 @@ class vote(models.Model):
 	def registerVote(self,bookmark,user,verdict):
 		existingVote=vote.objects.filter(bookmarkEntry=bookmark).filter(user=user)
 		if existingVote:
-			existingVote[0].verdict=verdict
-			existingVote[0].save()
+			existingVote.verdict=verdict
+			existingVote.save()
 		else:
 			newVote=vote(bookmarkEntry=bookmark,user=user,verdict=verdict)
 			newVote.save()
